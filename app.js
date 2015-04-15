@@ -137,6 +137,9 @@ app.get('/photos', ensureAuthenticated, function(req, res){
             //create temporary json object
             tempJSON = {};
             tempJSON.url = item.images.low_resolution.url;
+            //get caption data and make sure it's not null
+            if (item.caption != null)
+              tempJSON.caption = item.caption.text;
             //insert json object into image array
             return tempJSON;
           });
@@ -164,11 +167,11 @@ app.get('/auth/instagram',
 //   Use passport.authenticate() as route middleware to authenticate the
 //   request.  If authentication fails, the user will be redirected back to the
 //   login page.  Otherwise, the primary route function function will be called,
-//   which, in this example, will redirect the user to the home page.
+//   which, in this example, will redirect the user to the user's liked photos.
 app.get('/auth/instagram/callback', 
   passport.authenticate('instagram', { failureRedirect: '/login'}),
   function(req, res) {
-    res.redirect('/account');
+    res.redirect('/photos');
   });
 
 app.get('/logout', function(req, res){
